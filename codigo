@@ -1,0 +1,121 @@
+#include <DHT.h>
+//PINES ANALOGICOS PARA LEER DATOS DE LOS DHT11
+#define DHTPIN1 A1    // Pin digital al que está conectado el sensor 1
+#define DHTPIN2 A2  // Pin digital al que está conectado el sensor 2
+#define DHTPIN3 A3  // Pin digital al que está conectado el sensor 3
+#define DHTPIN4 A4  // Pin digital al que está conectado el sensor 4
+#define DHTTYPE DHT11   // Tipo de sensor (DHT11, DHT22, AM2302)
+
+//PINES PARA LA SEÑAL DE CONTROS DE LOS RELES
+int pin1=3;
+int pin2=4;
+int pin3=5;
+int pin4=8;
+int pin5=9;
+int pin6=10;
+int pin7=11;
+int pulverizado=12;
+int electrovalvula=11;
+
+DHT dht1(DHTPIN1, DHTTYPE);
+DHT dht2(DHTPIN2, DHTTYPE);
+DHT dht3(DHTPIN3, DHTTYPE);
+DHT dht4(DHTPIN4, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Leyendo datos del sensor DHT11...");
+  dht1.begin();
+  dht2.begin();
+  dht3.begin();
+  dht4.begin();
+  pinMode(pin1,OUTPUT);
+  pinMode(pin2,OUTPUT);
+  pinMode(pin3,OUTPUT);
+  pinMode(pin4,OUTPUT);
+  pinMode(pin5,OUTPUT);
+  pinMode(pin6,OUTPUT);
+  pinMode(pin7,OUTPUT);
+  pinMode(pulverizado,OUTPUT);
+}
+
+void loop() {
+  // Espera unos segundos entre mediciones.
+  delay(2000);
+
+  // Lectura de la temperatura  en grados Celsius
+  float temperatura1 = dht1.readTemperature();
+  // Lectura de la humedad relativa
+  float humedad1 = dht1.readHumidity();
+
+  float temperatura2 = dht2.readTemperature();
+  // Lectura de la humedad relativa
+  float humedad2 = dht2.readHumidity();
+
+  float temperatura3 = dht3.readTemperature();
+  // Lectura de la humedad relativa
+  float humedad3 = dht3.readHumidity();
+
+  float temperatura4 = dht4.readTemperature();
+  // Lectura de la humedad relativa
+  float humedad4 = dht4.readHumidity();
+
+  // Muestra los valores de temperatura y humedad en el monitor serial
+  Serial.print("Temperatura 1: ");
+  Serial.print(temperatura1);
+  Serial.print("°C\t");
+  Serial.print("Humedad 1: ");
+  Serial.print(humedad1);
+  Serial.println("%");
+
+  // Muestra los valores de temperatura y humedad en el monitor serial
+  Serial.print("Temperatura 2: ");
+  Serial.print(temperatura2);
+  Serial.print("°C\t");
+  Serial.print("Humedad 2: ");
+  Serial.print(humedad2);
+  Serial.println("%");
+
+  // Muestra los valores de temperatura y humedad en el monitor serial
+  Serial.print("Temperatura 3: ");
+  Serial.print(temperatura3);
+  Serial.print("°C\t");
+  Serial.print("Humedad 3: ");
+  Serial.print(humedad3);
+  Serial.println("%");
+
+  // Muestra los valores de temperatura y humedad en el monitor serial
+  Serial.print("Temperatura 4: ");
+  Serial.print(temperatura4);
+  Serial.print("°C\t");
+  Serial.print("Humedad 4: ");
+  Serial.print(humedad4);
+  Serial.println("%");
+
+  //temperatura promedio
+  float temp_prom=(temperatura1+temperatura2+temperatura2)/3;
+  Serial.print("Temperatura Promedio: ");
+  Serial.print(temp_prom);
+
+   Serial.println("-------------------------------------");
+
+
+
+
+digitalWrite(pin1,HIGH);
+digitalWrite(pin2,HIGH);
+digitalWrite(pin3,HIGH);
+
+//Reles que controlan las bombas peristaticas
+digitalWrite(pin4,LOW);
+digitalWrite(pin5,LOW);
+digitalWrite(pin6,LOW);
+
+//Reles que controlan las licuadoras de las soluciones
+digitalWrite(pin7,LOW); //FLUJO DE RETORNO ENCENDIDO
+digitalWrite(pulverizado,LOW); //PULVERIZADO APAGADO
+delay(60000);
+digitalWrite(pin7,HIGH);//FLUJO DE RETORNO APAGADO
+digitalWrite(pulverizado,HIGH); //PULVERIZADO ENCENDIDO
+delay(60000);
+}
